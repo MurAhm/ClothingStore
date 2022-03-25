@@ -1,9 +1,5 @@
 package models;
 
-import java.math.BigDecimal;
-
-import static common.ConstantMessages.*;
-
 public class Trousers extends  BaseClothing{
     private int trousersSize;
     public Trousers(String name, String brand, double price, int trousersSize, String color ) {
@@ -16,11 +12,7 @@ public class Trousers extends  BaseClothing{
     }
 
     public void setTrousersSize(int trousersSize) {
-        if(trousersSize < 42 || trousersSize > 66) {
-            throw new IllegalArgumentException(WRONG_TROUSERS_SIZE);
-        } else if(trousersSize % 2 != 0) {
-            throw new IllegalArgumentException(WRONG_TROUSERS_SIZE_ODD_NUMBER);
-        } else {
+        if((trousersSize >= 42 && trousersSize <= 66) &&  trousersSize % 2 == 0) {
             this.trousersSize = trousersSize;
         }
     }
