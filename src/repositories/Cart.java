@@ -15,14 +15,13 @@ public class Cart implements Repository<Clothing> {
     }
 
     @Override
-    public Collection<Clothing> getModels() {
+    public Collection<Clothing> getProducts() {
         return Collections.unmodifiableCollection(clothing);
     }
 
     @Override
-    public void add(Clothing model) {
-        clothing.add(model);
+    public void add(Clothing product) {
+        clothing.add(product);
     }
-
 
 }

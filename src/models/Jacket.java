@@ -14,7 +14,7 @@ public class Jacket extends  BaseClothing{
     }
 
     public void setJacketSize(int jacketSize) {
-        if((jacketSize >= 42 && jacketSize <= 66) &&  jacketSize % 2 == 0) {
+        if ((jacketSize >= 42 && jacketSize <= 66) && jacketSize % 2 == 0) {
             this.jacketSize = jacketSize;
         }
     }

@@ -3,7 +3,7 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shirt extends BaseClothing{
+public class Shirt extends BaseClothing {
 
     private static final List<String> SHIRT_SIZES = new ArrayList<>(List.of("XS", "S", "M", "L", "XL", "2XL"));
     private String shirtSize;
@@ -18,7 +18,7 @@ public class Shirt extends BaseClothing{
     }
 
     public void setShirtSize(String shirtSize) {
-        if(SHIRT_SIZES.contains(shirtSize)) {
+        if (SHIRT_SIZES.contains(shirtSize)) {
             this.shirtSize = shirtSize;
         }
     }
@@ -26,6 +26,6 @@ public class Shirt extends BaseClothing{
     @Override
     public String toString() {
         return super.toString() +
-                "Size:" + this.getShirtSize()+ ".\n";
+                "Size:" + this.getShirtSize() + ".\n";
     }
 }

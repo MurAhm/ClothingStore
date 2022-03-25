@@ -1,8 +1,6 @@
 package models;
 
-import java.math.BigDecimal;
-
-public abstract class BaseClothing implements Clothing{
+public abstract class BaseClothing implements Clothing {
     private String name;
     private String brand;
     private double price;
@@ -50,7 +48,7 @@ public abstract class BaseClothing implements Clothing{
     @Override
     public String toString() {
         return "Name:" + this.name + "\n" +
-        "Brand:" + this.brand + "\n" +
+                "Brand:" + this.brand + "\n" +
                 "Price:" + this.price + "\n" +
                 "Color:" + this.color + "\n";
     }

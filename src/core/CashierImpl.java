@@ -10,12 +10,61 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CashierImpl implements Cashier {
-    private final Cart cart;
-    private final String dateAndTime;
+    private Cart cart;
+    private String dateAndTime;
 
     public CashierImpl(Cart cart, String dateAndTime) {
         this.cart = cart;
         this.dateAndTime = dateAndTime;
+    }
+
+    @Override
+    public void printReceipt() throws ParseException {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("Date: %s", dateAndTime))
+                .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append("---Products---")
+                .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append(System.lineSeparator());
+
+
+        int i = 0;
+        for (Clothing product : cart.getProducts()) {
+
+            sb.append(product.getName()).append(" - ").append(product.getBrand()).append(System.lineSeparator());
+            if ((product.getClass().getSimpleName().equals("Shirt") && product.getColor().equals("white"))) {
+                sb.append("$").append(product.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
+            } else if (product.getClass().getSimpleName().equals("Shirt") && product.getColor().equals("blue")) {
+                sb.append(System.lineSeparator());
+                sb.append("$").append(product.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
+            } else {
+                sb.append("$").append(product.getPrice()).append(System.lineSeparator());
+            }
+
+            if (getDiscountAmount(product) != 0) {
+                sb.append(String.format("#discount %.0f%% -$%.2f", getDiscountPercent(product), getDiscountAmount(product))).append(System.lineSeparator());
+
+                if (++i != cart.getProducts().size()) {
+                    sb.append(System.lineSeparator()).append(System.lineSeparator());
+                }
+            }
+        }
+
+        sb.append("-----------------------------------------------------------------------------------")
+                .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append(String.format("SUBTOTAL: $%.2f", getTotalSum()))
+                .append(System.lineSeparator())
+                .append(String.format("DISCOUNT: -$%.2f", getTotalDiscount(cart)))
+                .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append(String.format("TOTAL: $%.2f", getTotalSum() - getTotalDiscount(cart)));
+
+        System.out.println(sb.toString().trim());
+
     }
 
     private String dayOfWeek(String dateAndTime) throws ParseException {
@@ -28,74 +77,39 @@ public class CashierImpl implements Cashier {
         return formatter2.format(date);
     }
 
+    private double getTotalSum() {
+        return cart.getProducts().stream().mapToDouble(Clothing::getPrice).sum();
+    }
 
-    @Override
-    public void print() throws ParseException {
-        StringBuilder sb = new StringBuilder();
-        double totalSum = 0.00;
-        double totalDiscount = 0.00;
+    private double getDiscountPercent(Clothing product) throws ParseException {
+        double discountPercent = 0.00;
 
-        sb.append(String.format("Date: %s", dateAndTime))
-                .append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append("---Products---")
-                .append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append(System.lineSeparator());
-
-
-        int i = 0;
-        for (Clothing model : cart.getModels()) {
-            double discountPercent = 0.00;
-            totalSum += model.getPrice();
-
-            if (dayOfWeek(dateAndTime).equals("Tuesday")) {
-                if (model.getClass().getSimpleName().equals("Shoes")) {
-                    discountPercent = 25;
-                } else if (cart.getModels().size() < 3 && model.getClass().getSimpleName().equals("Shirt")) {
-                    discountPercent = 10;
-                } else if (cart.getModels().size() >= 3) {
-                    discountPercent = 20;
-                }
-            } else if (cart.getModels().size() >= 3) {
+        if (dayOfWeek(dateAndTime).equals("Tuesday")) {
+            if (product.getClass().getSimpleName().equals("Shoes")) {
+                discountPercent = 25;
+            } else if (cart.getProducts().size() < 3 && product.getClass().getSimpleName().equals("Shirt")) {
+                discountPercent = 10;
+            } else if (cart.getProducts().size() >= 3) {
                 discountPercent = 20;
             }
-
-
-            double discount = (Math.round((model.getPrice()) * discountPercent) / 100.0);
-            totalDiscount += discount;
-
-            sb.append(model.getName()).append(" - ").append(model.getBrand()).append(System.lineSeparator());
-            if ((model.getClass().getSimpleName().equals("Shirt") && model.getColor().equals("white"))) {
-                sb.append("$").append(model.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
-            } else if (model.getClass().getSimpleName().equals("Shirt") && model.getColor().equals("blue")) {
-                sb.append(System.lineSeparator());
-                sb.append("$").append(model.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
-            } else {
-                sb.append("$").append(model.getPrice()).append(System.lineSeparator());
-            }
-
-
-            if (discount != 0) {
-                sb.append(String.format("#discount %.0f%% -$%.2f", discountPercent, discount)).append(System.lineSeparator());
-
-                if (++i != cart.getModels().size()) {
-                    sb.append(System.lineSeparator()).append(System.lineSeparator());
-                }
-            }
+        } else if (cart.getProducts().size() >= 3) {
+            discountPercent = 20;
         }
 
-        sb.append("-----------------------------------------------------------------------------------")
-                .append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append(String.format("SUBTOTAL: $%.2f", totalSum))
-                .append(System.lineSeparator())
-                .append(String.format("DISCOUNT: -$%.2f", totalDiscount))
-                .append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append(String.format("TOTAL: $%.2f", totalSum - totalDiscount));
+        return discountPercent;
 
-        System.out.println(sb.toString().trim());
+    }
 
+    private double getDiscountAmount(Clothing product) throws ParseException {
+        return (Math.round((product.getPrice()) * getDiscountPercent(product)) / 100.0);
+    }
+
+    private double getTotalDiscount(Cart cart) throws ParseException {
+        double totalDiscount = 0.00;
+        for (Clothing model : cart.getProducts()) {
+            totalDiscount += getDiscountAmount(model);
+        }
+
+        return totalDiscount;
     }
 }

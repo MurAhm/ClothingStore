@@ -72,7 +72,7 @@ public class Main {
 
         Cashier cashier = new CashierImpl(cart, "2022-02-01 12:34:56");
 
-        cashier.print();
+        cashier.printReceipt();
 
 
     }
