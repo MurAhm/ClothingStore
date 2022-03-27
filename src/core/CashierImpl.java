@@ -24,7 +24,6 @@ public class CashierImpl implements Cashier {
 
         sb.append(String.format("Date: %s", dateAndTime))
                 .append(System.lineSeparator())
-                .append(System.lineSeparator())
                 .append("---Products---")
                 .append(System.lineSeparator())
                 .append(System.lineSeparator())
@@ -34,21 +33,15 @@ public class CashierImpl implements Cashier {
         int i = 0;
         for (Clothing product : cart.getProducts()) {
 
-            sb.append(product.getName()).append(" - ").append(product.getBrand()).append(System.lineSeparator());
-            if ((product.getClass().getSimpleName().equals("Shirt") && product.getColor().equals("white"))) {
-                sb.append("$").append(product.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
-            } else if (product.getClass().getSimpleName().equals("Shirt") && product.getColor().equals("blue")) {
-                sb.append(System.lineSeparator());
-                sb.append("$").append(product.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
-            } else {
-                sb.append("$").append(product.getPrice()).append(System.lineSeparator());
-            }
+            sb.append(product.getName()).append(" - ").append(product.getBrand()).append(System.lineSeparator())
+            .append("$").append(product.getPrice()).append(System.lineSeparator()).append(System.lineSeparator());
 
             if (getDiscountAmount(product) != 0) {
-                sb.append(String.format("#discount %.0f%% -$%.2f", getDiscountPercent(product), getDiscountAmount(product))).append(System.lineSeparator());
+                sb.append(String.format("#discount %.0f%% -$%.2f", getDiscountPercent(product), getDiscountAmount(product)))
+                        .append(System.lineSeparator()).append(System.lineSeparator());
 
                 if (++i != cart.getProducts().size()) {
-                    sb.append(System.lineSeparator()).append(System.lineSeparator());
+                    sb.append(System.lineSeparator());
                 }
             }
         }
